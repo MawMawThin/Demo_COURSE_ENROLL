@@ -40,7 +40,11 @@ public class Course {
     @JoinTable(
             name = "course_student",
             joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
+            inverseJoinColumns = @JoinColumn(name = "student_id"),
+            uniqueConstraints = @UniqueConstraint(
+                    name = "uk_course_student",
+                    columnNames = {"course_id", "student_id"}
+            )
     )
     private List<Student> students = new ArrayList<>();
 }

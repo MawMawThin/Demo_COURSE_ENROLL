@@ -2,6 +2,7 @@ package com.example.demo_course_enroll.payload.input;
 
 import com.example.demo_course_enroll.model.Teacher;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class TeacherInput {
 
+    @NotBlank(message = "Teacher name is required")
     private String name;
 
     @Email(message = "Invalid email")

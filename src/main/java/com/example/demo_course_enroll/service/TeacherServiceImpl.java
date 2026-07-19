@@ -1,14 +1,15 @@
 package com.example.demo_course_enroll.service;
 
+import com.example.demo_course_enroll.exception.ResourceNotFoundException;
 import com.example.demo_course_enroll.model.Teacher;
 import com.example.demo_course_enroll.payload.input.TeacherInput;
 import com.example.demo_course_enroll.payload.output.TeacherOutput;
 import com.example.demo_course_enroll.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,44 +18,44 @@ public class TeacherServiceImpl implements ITeacherService {
     private final TeacherRepository teacherRepository;
 
     @Override
-    public String registerTeacher(TeacherInput input) {
-        if (input.getName() == null || input.getName().isBlank()) {
-            throw new RuntimeException("Teacher name is required");
-        }
+    @Transactional
+    public TeacherOutput registerTeacher(TeacherInput input) {
         Teacher teacher = TeacherInput.toModel(input);
         teacher.setDeleted(false);
-        teacherRepository.save(teacher);
-        return "Teacher registered successfully";
+        return TeacherOutput.fromModel(teacherRepository.save(teacher));
     }
 
     @Override
-    public String updateTeacher(Long id, TeacherInput input) {
+    @Transactional
+    public TeacherOutput updateTeacher(Long id, TeacherInput input) {
         Teacher teacher = teacherRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
         TeacherInput.updateModel(input, teacher);
-        teacherRepository.save(teacher);
-        return "Teacher updated successfully";
+        return TeacherOutput.fromModel(teacherRepository.save(teacher));
     }
 
     @Override
-    public String deleteTeacher(Long id) {
+    @Transactional
+    public void deleteTeacher(Long id) {
         Teacher teacher = teacherRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
         teacher.setDeleted(true);
         teacherRepository.save(teacher);
-        return "Teacher deleted successfully";
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TeacherOutput> getAllTeachers() {
         return teacherRepository.findByDeletedFalse().stream()
-                .map(TeacherOutput::fromModel).toList();
+                .map(TeacherOutput::fromModel)
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TeacherOutput getTeacherById(Long id) {
         Teacher teacher = teacherRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
         return TeacherOutput.fromModel(teacher);
     }
 }

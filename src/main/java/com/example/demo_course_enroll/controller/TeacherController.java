@@ -29,18 +29,19 @@ public class TeacherController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerTeacher(@Valid @RequestBody TeacherInput input) {
+    public ResponseEntity<TeacherOutput> registerTeacher(@Valid @RequestBody TeacherInput input) {
         return ResponseEntity.status(HttpStatus.CREATED).body(teacherService.registerTeacher(input));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTeacher(@PathVariable Long id,
-                                                @Valid @RequestBody TeacherInput input) {
+    public ResponseEntity<TeacherOutput> updateTeacher(@PathVariable Long id,
+                                                       @Valid @RequestBody TeacherInput input) {
         return ResponseEntity.ok(teacherService.updateTeacher(id, input));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTeacher(@PathVariable Long id) {
-        return ResponseEntity.ok(teacherService.deleteTeacher(id));
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
+        teacherService.deleteTeacher(id);
+        return ResponseEntity.noContent().build();
     }
 }

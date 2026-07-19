@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ICourseService {
 
-    String registerCourse(CourseInput input);
+    CourseOutput registerCourse(CourseInput input);
 
-    String updateCourse(Long id, CourseInput input);
+    CourseOutput updateCourse(Long id, CourseInput input);
 
-    String deleteCourse(Long id);
+    void deleteCourse(Long id);
 
     List<CourseOutput> getAllCourses();
 

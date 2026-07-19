@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ITeacherService {
 
-    String registerTeacher(TeacherInput input);
+    TeacherOutput registerTeacher(TeacherInput input);
 
-    String updateTeacher(Long id, TeacherInput input);
+    TeacherOutput updateTeacher(Long id, TeacherInput input);
 
-    String deleteTeacher(Long id);
+    void deleteTeacher(Long id);
 
     List<TeacherOutput> getAllTeachers();
 

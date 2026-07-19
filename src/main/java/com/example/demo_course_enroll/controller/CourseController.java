@@ -34,18 +34,19 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerCourse(@Valid @RequestBody CourseInput input) {
+    public ResponseEntity<CourseOutput> registerCourse(@Valid @RequestBody CourseInput input) {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.registerCourse(input));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCourse(@PathVariable Long id,
-                                               @Valid @RequestBody CourseInput input) {
+    public ResponseEntity<CourseOutput> updateCourse(@PathVariable Long id,
+                                                     @Valid @RequestBody CourseInput input) {
         return ResponseEntity.ok(courseService.updateCourse(id, input));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
-        return ResponseEntity.ok(courseService.deleteCourse(id));
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+        courseService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
     }
 }
